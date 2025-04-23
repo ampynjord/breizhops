@@ -1,0 +1,28 @@
+# Ignorer les fichiers de node_modules
+node_modules/
+
+# Ignorer les fichiers de logs
+*.log
+
+# Ignorer les fichiers d'environnement (seulement pour le développement local)
+.env
+
+# Ignorer les fichiers générés par le système (ex : fichiers de configuration IDE)
+.vscode/
+.idea/
+
+# Ignorer le répertoire de construction pour les applications
+frontend/build/
+backend/build/
+
+# Ignorer les fichiers Dockerfiles pour éviter leur inclusion
+Dockerfile
+
+# Ignorer les fichiers de configuration de tests
+*.test.js
+*.spec.js
+
+# Ignorer les dossiers et fichiers de documentation et autres outils
+docs/
+test/
+coverage/
