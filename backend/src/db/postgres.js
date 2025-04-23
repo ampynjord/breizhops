@@ -1,14 +1,14 @@
-import { Pool } from 'pg';
+import pkg from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pool = new Pool({
-  host: process.env.PG_HOST,
-  port: process.env.PG_PORT,
-  user: process.env.PG_USER,
-  password: process.env.PG_PASSWORD,
-  database: process.env.PG_DATABASE
-});
+const { Pool } = pkg;
 
-export default pool;
+export const pool = new Pool({
+  user: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
+  database: process.env.POSTGRES_DB,
+});

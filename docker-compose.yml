@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   # Service Frontend
   frontend:
@@ -19,8 +21,9 @@ services:
       dockerfile: backend/Dockerfile
     container_name: breizhops-backend
     ports:
-      - "3000:3000"
+      - "${API_PORT}:${API_PORT}" 
     environment:
+      - API_PORT=${API_PORT} 
       - NEO4J_URL=${NEO4J_URL}
       - NEO4J_USER=${NEO4J_USER}
       - NEO4J_PASSWORD=${NEO4J_PASSWORD}
@@ -29,6 +32,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    env_file:
+      - .env  # Utilisation du fichier .env à la racine
     depends_on:
       - postgres
       - neo4j

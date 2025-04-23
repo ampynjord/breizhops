@@ -1,40 +1,40 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import pool from './db/postgres.js';
-import { getSession } from './db/neo4j.js';
-import userRoutes from './routes/user.routes.js';
+import authRoutes from './routes/authRoutes.js';
+import sequelize from './config/database.js';
 
+// Chargement des variables d'environnement
 dotenv.config();
 
+// Initialisation de l'application Express
 const app = express();
+
+// Middleware CORS pour autoriser les requêtes cross-origin
 app.use(cors());
+
+// Middleware pour parser les requêtes JSON
 app.use(express.json());
-app.use('/users', userRoutes);
 
-app.get('/', (req, res) => res.send('BreizhOps API running ✅'));
+// Routes
+app.use('/api/auth', authRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-
-
-app.get('/test/postgres', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT NOW()');
-        res.json({ postgres: result.rows[0] });
-    } catch (err) {
-        res.status(500).json({ error: 'Postgres error', details: err.message });
-    }
+// Route d'exemple
+app.get('/', (req, res) => {
+  res.status(200).json({ message: '✅ Backend is working!' });
 });
 
-app.get('/test/neo4j', async (req, res) => {
-    const session = getSession();
-    try {
-        const result = await session.run('RETURN "Neo4j OK" AS message');
-        res.json({ neo4j: result.records[0].get('message') });
-    } catch (err) {
-        res.status(500).json({ error: 'Neo4j error', details: err.message });
-    } finally {
-        await session.close();
-    }
-});
+// Connexion DB
+sequelize.authenticate()
+  .then(() => {
+    console.log('✅ Connected to PostgreSQL');
+
+    // Lancement du serveur uniquement si la DB est OK
+    const PORT = process.env.API_PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Backend running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('❌ Database connection failed:', error);
+  });
